@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service("FakeStoreProductService")
 public class FakeStoreProductService implements ProductService {
 
     RestTemplate restTemplate;
@@ -56,6 +56,19 @@ public class FakeStoreProductService implements ProductService {
         fakeStoreProductRequestDto.setImage(imageUrl);
         fakeStoreProductRequestDto.setCategory(category);
         FakeProductStoreDto fakeProductStoreDto = restTemplate.postForObject("https://fakestoreapi.com/products", fakeStoreProductRequestDto, FakeProductStoreDto.class);
+
+        return fakeProductStoreDto.toProduct();
+    }
+
+    @Override
+    public Product deleteProduct(long id) throws ProductNotFoundException {
+        FakeProductStoreDto fakeProductStoreDto = restTemplate.getForObject("https://fakestoreapi.com/products/" + id
+                , FakeProductStoreDto.class);
+
+        if(fakeProductStoreDto == null) {
+            throw new ProductNotFoundException("Product with id " + id + " not found");
+        }
+         restTemplate.delete("https://fakestoreapi.com/products/" + id);
 
         return fakeProductStoreDto.toProduct();
     }
