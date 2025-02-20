@@ -74,7 +74,7 @@ public class ProductController {
     @DeleteMapping("/products/{id}")
     public ResponseEntity<ProductResponseDto> deleteProduct(@PathVariable long id) throws ProductNotFoundException {
 
-        Product product= productService.getProductById(id);
+        Product product= productService.deleteProduct(id);
 
         ProductResponseDto productResponseDto = ProductResponseDto.fromEntity(product);
 
